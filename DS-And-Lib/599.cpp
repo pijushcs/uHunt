@@ -1,68 +1,60 @@
-#include<iostream>
-#include<map>
-#include<vector>
-#include<string>
+#include <iostream>
+#include <vector>
+#include <string>
 using namespace std;
 
-typedef pair<int, int> ii;
+typedef vector<bool> vb;
+typedef vector<int> vi;
 
-map<char, vector<char> > adjMap;
-map<char, bool> visMap;
-vector<char> vNode;
+vb vis, vcur;
+vector<vi> adjList;
 
-void findComponent(char c) {
-    visMap[c]=true;
-    for(int i=0; i<adjMap[c].size(); i++) {
-        char nxtV=adjMap[c][i];
-        if(visMap[nxtV]==false) findComponent(nxtV);
+void dfs(int u) {
+    if(vis[u]) return;
+
+    vis[u]=true;
+    for(int i=0; i<adjList[u].size(); i++) {
+        int v=adjList[u][i];
+        if(vis[v]==false) dfs(v);
     }
-    return;
-}
-
-ii findTreeAcron() {
-    int resTree=0, resAcron=0;
-    for(int i=0; i<vNode.size(); i++) {
-        if(visMap[vNode[i]]==false) {
-            findComponent(vNode[i]);
-
-            if(adjMap[vNode[i]].size()>0) resTree++;
-            else resAcron++;
-        }
-    }
-
-    return ii(resTree, resAcron);
 }
 
 int main() {
-    int n;
-    char vx, vy;
     string str;
+    int n, nTree, nAcron;
+    char u, v;
 
     freopen("testCase.txt", "r", stdin);
-    freopen("testOut.txt", "w", stdout);
 
     cin>>n; getline(cin, str);
     while(n--) {
-        adjMap.clear();
-        vNode.clear();
-        visMap.clear();
+        vis.assign(30, false);
+        vcur.assign(30, false);
+        nTree=0; nAcron=0;
+
+        adjList.assign(30, vi());
 
         getline(cin, str);
         while(str[0]!='*') {
-            sscanf(str.c_str(), "(%c,%c)", &vx, &vy);
-            adjMap[vx].push_back(vy);
-            adjMap[vy].push_back(vx);
+            sscanf(str.c_str(), "(%c,%c)", &u, &v);
+            adjList[u-'A'].push_back(v-'A');
+            adjList[v-'A'].push_back(u-'A');
+
             getline(cin, str);
         }
 
         getline(cin, str);
-        for(int i=0; i<str.length(); i+=2) {
-            vx=str[i];
-            visMap[vx]=false;
-            vNode.push_back(vx);
+        for(int i=0; i<str.length(); i=i+2)
+            vcur[str[i]-'A']=true;
+
+        for(int i=0; i<vcur.size(); i++) {
+            if(vcur[i]==true && vis[i]==false) {
+                if(adjList[i].size()==0) nAcron++;
+                else nTree++;
+                dfs(i);
+            }
         }
 
-        ii res=findTreeAcron();
-        cout<<"There are "<<res.first<<" tree(s) and "<<res.second<<" acorn(s)."<<endl;
+        printf("There are %d tree(s) and %d acorn(s).\n", nTree, nAcron);
     }
 }
