@@ -42,7 +42,7 @@ int main() {
 
         cin>>n;
         /**********************************************************************
-        * Wrong-Assumption: Sum of two numbers closest to k                   *
+        * Wrong-Assumption: Sum of (two numbers closest to k)                   *
         * while(m--) {                                                        *
         *    cin>>k;                                                          *
         *                                                                     *
