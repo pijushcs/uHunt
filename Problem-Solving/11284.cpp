@@ -2,12 +2,13 @@
 #include<vector>
 #include<cstring>
 #include<cmath>
+#include<bitset>
 using namespace std;
 
 #define INF 100000.0
 
 double adjList[60][60], dP[60][4097], asave[60];
-int vnode[30];
+vector<int> vnode;
 
 void initList(int n) {
     for(int i=0; i<n; i++) {
@@ -55,11 +56,13 @@ double dvdProfit(int pos, int p, int bmask) {
 }
 
 int main() {
-    int t,n,p,m,u,v;
+    int t,n,p,m,u,v, ptemp;
     double d;
 
-    freopen("testCase.txt", "r", stdin);
-    freopen("testOut.txt", "w", stdout);
+    bitset<60> btemp;
+
+    //freopen("testCase.txt", "r", stdin);
+    //freopen("testOut.txt", "w", stdout);
 
     cin>>t;
     while(t--) {
@@ -69,21 +72,27 @@ int main() {
 
         for(int i=0; i<m; i++) {
             cin>>u>>v>>d;
-            adjList[u][v]=d;
-            adjList[v][u]=d;
+            adjList[u][v]=min(adjList[u][v],d);
+            adjList[v][u]=min(adjList[u][v],d);
         }
 
         floydWarshall(n+1);
 
-        cin>>p;
-        for(int i=0; i<p; i++) {
-            cin>>vnode[i]>>d;
-            asave[vnode[i]]+=d;
+        cin>>ptemp; btemp.reset();
+        for(int i=0; i<ptemp; i++) {
+            cin>>v>>d;
+            btemp.set(v);
+            asave[v]+=d;
         }
+
+        p=btemp.count();
+        vnode.clear();
+        for(int i=1; i<=n; i++)
+            if(btemp.test(i)) vnode.push_back(i);
 
         double res = dvdProfit(0, p, 0);
 
-        if(res>0) printf("Daniel can save $%0.2f\n", res);
+        if((res-0.0)>1e-7) printf("Daniel can save $%0.2f\n", res);
         else printf("Don't leave the house\n");
     }
 }

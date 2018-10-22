@@ -14,18 +14,18 @@ using namespace std;
  * In our solution scenario: Let, f(a+k,d) = p and f(b+c,d) = q
  * After swapping: Let f(a+c,d) = r and f(b+k,d) = s
  *
- * Case 0:
+ * Case 1:
  * If p=0 and q=0, all good!
  *
- * Case 1:
+ * Case 2:
  * If p=0 and q>0 (a<b | k>c), then a+k<=d and a<d, k<d.
  * Now, if we swap c-k (a<b | c<k), since c<k, c<d and r=0, but q was >0 in our hypothesis solution.
  * Now, q=f(b+c,d)>0 since k>c, s=f(b+k,d)>f(b+c,d)>0. Thus after swapping overall loss increases.
  *
- * Case 2:
- * If p>0 and q=0 (Symetric to earlier scenario: swap a-b)
- *
  * Case 3:
+ * If p>0 and q=0 (Symmetric to earlier scenario: swap a-b)
+ *
+ * Case 4: (Updated in TestCpp: 11389-Case-4.jpg)
  * If p>0 and q>0 (a<b | k>c): f(a+k,d)>d and f(b+c,d)>d
  * Swaping c-k (a<b | c<k). s must be>0 as c<k, i.e f(b+c,d)>d, f(b+k,d)>f(b+c,d)>d
  * Now for f(a+c,d) to be 0, c<d and a<d and a+c<d.
